@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { addInfo } from './../ducks/reducer';
 
 class Profile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      u_auth_0: "",
       u_pic_url: "",
       u_first_name: "",
       u_last_name: "",
@@ -40,6 +41,9 @@ class Profile extends Component {
   //Method onClick: When the "Update" button is clicked, update state and update the db with the newly entered information.
 
   render() {
+    
+    let { addInfo, u_pic_url, u_first_name, u_last_name, u_gender, u_hair_color, u_eye_color, u_hobby, u_birth_day, u_birth_month, u_birth_year } = this.props;
+
     return (
       <div className="profile_overall">
 
@@ -109,4 +113,25 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+function moveFromStoreToProps(state) {
+  return {
+    u_pic_url: state.u_pic_url,
+    u_first_name: state.u_first_name,
+    u_last_name: state.u_last_name,
+    u_gender: state.u_gender,
+    u_hair_color: state.u_hair_color,
+    u_eye_color: state.u_eye_color,
+    u_hobby: state.u_hobby,
+    u_birth_day: state.u_birth_day,
+    u_birth_month: state.u_birth_month,
+    u_birth_year: state.u_birth_year
+  }
+}
+
+var outputActions = {
+  addInfo
+}
+
+let connectedApp = connect(moveFromStoreToProps, outputActions);
+
+export default connectedApp(Profile);

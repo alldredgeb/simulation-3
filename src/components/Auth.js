@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 class Auth extends Component {
 
   //Component did mount: If a user is logged in, route them automatically to the "Dashboard" component.
+  componentDidMount() {
+    axios.get('/api/checklogin').then( () => {
+      this.props.history.push('/dashboard');
+    }).catch( response => {
+    })
+  }
 
   render() {
     return (
