@@ -1,0 +1,46 @@
+.auth_background {
+  width: 100vw;
+  height: 100vh;
+  background-image: linear-gradient(99deg, #146F58, #318972, 40%, #4EA48D 73%, #6ABEA7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.containter_of_auth_elements {
+  width: 456px;
+  height: 342px;
+  background-image: linear-gradient(97deg, #237C65, #4AA087);
+  box-shadow: 0 10px 20px 0 rgba(0,0,0,0.1), 0 6px 6px 0 rgba(0,0,0,0.2);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.containter_of_auth_elements > p {
+  font-size: 100px;
+  font-weight: bold;
+  color: white;
+  margin: 10px;
+}
+
+.login_register_container {
+  height: 40px;
+  width: 300px;
+  background-color: #403D39;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_register_container a {
+  color: white;
+  font-weight: lighter;
+}
+
+a:-webkit-any-link {
+  text-decoration: none;
+}

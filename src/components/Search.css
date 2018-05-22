@@ -1,0 +1,140 @@
+.search_elements_container {
+  width: 870px;
+  height: 100px;
+  margin: auto;
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.search_criteria_drop_down {
+  margin-left: 20px;
+}
+
+.search_input_box {
+  width: 300px;
+  height: 20px;
+  margin-left: 10px;
+}
+
+.search_and_reset_buttons_container {
+  float: right;
+}
+
+.search_button, .reset_search_button {
+  width: 120px;
+  height: 35px;
+  cursor: pointer;
+}
+
+.search_button {
+  margin-left: 10px;
+  font-size: 18px;
+  color: white;
+  border-radius: 1px;
+  background-image: radial-gradient(circle at 50% 46%, #605D5A, #403D39);
+}
+
+.reset_search_button {
+  margin-left: 10px;
+  font-size: 18px;
+  border-radius: 1px;
+  background-image: radial-gradient(circle at 50% 0, #FFFFFF, #DEDEDE);
+  border: solid 1px #CACACA;
+}
+
+.search_results_container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.matched_search_friend_info_container {
+  width: 413px;
+  height: 130px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  margin-left: 15px;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px 0 rgba(0,0,0,0.2);
+  background: white;
+}
+
+.matched_search_friend_image {
+  width: 130px;
+  height: 130px;
+  margin-left: 10px;
+}
+
+.matched_search_friend_first_name, .matched_search_friend_last_name {
+  margin: 5px;
+  font-weight: bold;
+}
+
+.search_remove_friend_button, .search_add_friend_button {
+  width: 120px;
+  height: 40px;
+  font-size: 15px;
+  color: white;
+}
+
+.search_remove_friend_button {
+  border-radius: 1px;
+  background-image: radial-gradient(circle at 50% 46%, #605D5A, #403D39);
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.search_add_friend_button {
+  border-radius: 1px;
+  background-image: radial-gradient(circle at 50% 46%, #318972, #237C65);
+  border: solid 1px #CACACA;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+/* More code here */
+
+.container_of_page_links_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page_links_container {
+  width: 80%;
+  height: 60px;
+  background-image: linear-gradient(97deg, #237C65, #4AA087);
+  border-radius: 3px;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.current_page_indicator {
+  width: 70px;
+  height: 30px;
+  background: #403D39;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.current_page_number {
+  color: white;
+}
+
+.page_indicator {
+  width: 30px;
+  height: 30px;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+  cursor: pointer;
+}

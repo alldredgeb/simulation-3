@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { addInfo } from './../ducks/reducer';
+import home_logo from './../images/home.png';
+import search_logo from './../images/search.png';
+import './Dashboard.css';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -21,10 +24,8 @@ class Dashboard extends Component {
   //Component did mount: If a user is NOT logged in, route them automatically to the "Auth" component.
   componentDidMount() {
     axios.get('/api/checklogin').then( response => {
-      // console.log('dashboard_initial_load', response.data);
       this.props.addInfo(response.data)
       axios.get(`/api/recommended_friends`).then( response => {
-        // console.log('recommended friends', response );
         this.setState({
           recommended_friends: response.data,
           sorted_friends: response.data
@@ -38,65 +39,44 @@ class Dashboard extends Component {
   //Method: Update the sorting criteria as soon as it is changed
   //Method: Sort everyone who is not currently the user's friend by the sorting criteria provided
   handleSortOnChange(event) {
-    console.log('results_of_sort', event.target.value);
     if(event.target.value === '--') {
-      this.setState({
-        sorted_friends: this.state.recommended_friends
-      })
+      this.setState({sorted_friends: this.state.recommended_friends})
     }
     if(event.target.value === 'First Name') {
       let sortedArray = this.state.recommended_friends.filter( friend => friend.u_first_name === this.props.u_first_name );
-      this.setState({
-        sorted_friends: sortedArray
-      })
+      this.setState({sorted_friends: sortedArray})
     }
     if(event.target.value === 'Last Name') {
       let sortedArray = this.state.recommended_friends.filter( friend => friend.u_last_name === this.props.u_last_name );
-      this.setState({
-        sorted_friends: sortedArray
-      })
+      this.setState({sorted_friends: sortedArray})
     }
     if(event.target.value === 'Gender') {
       let sortedArray = this.state.recommended_friends.filter( friend => friend.u_gender === this.props.u_gender );
-      this.setState({
-        sorted_friends: sortedArray
-      })
+      this.setState({sorted_friends: sortedArray})
     }
     if(event.target.value === 'Hair Color') {
       let sortedArray = this.state.recommended_friends.filter( friend => friend.u_hair_color === this.props.u_hair_color );
-      this.setState({
-        sorted_friends: sortedArray
-      })
+      this.setState({sorted_friends: sortedArray})
     }
     if(event.target.value === 'Eye Color') {
       let sortedArray = this.state.recommended_friends.filter( friend => friend.u_eye_color === this.props.u_eye_color );
-      this.setState({
-        sorted_friends: sortedArray
-      })
+      this.setState({sorted_friends: sortedArray})
     }
     if(event.target.value === 'Hobby') {
       let sortedArray = this.state.recommended_friends.filter( friend => friend.u_hobby === this.props.u_hobby );
-      this.setState({
-        sorted_friends: sortedArray
-      })
+      this.setState({sorted_friends: sortedArray})
     }
     if(event.target.value === 'Birth Day') {
       let sortedArray = this.state.recommended_friends.filter( friend => friend.u_birth_day === this.props.u_birth_day );
-      this.setState({
-        sorted_friends: sortedArray
-      })
+      this.setState({sorted_friends: sortedArray})
     }
     if(event.target.value === 'Birth Month') {
       let sortedArray = this.state.recommended_friends.filter( friend => friend.u_birth_month === this.props.u_birth_month );
-      this.setState({
-        sorted_friends: sortedArray
-      })
+      this.setState({sorted_friends: sortedArray})
     }
     if(event.target.value === 'Birth Year') {
       let sortedArray = this.state.recommended_friends.filter( friend => friend.u_birth_year === this.props.u_birth_year );
-      this.setState({
-        sorted_friends: sortedArray
-      })
+      this.setState({sorted_friends: sortedArray})
     }
   }
 
@@ -105,8 +85,7 @@ class Dashboard extends Component {
     axios.post('/api/add_friend', {
       friend_id: new_friend_id
     }).then ( response => {
-      console.log('added_friend_results', response);
-      //pull the recommended_friends from the db again (since state will be updated, and the component will re-render anyway)
+      //pull the recommended_friends from the db again
       axios.get(`/api/recommended_friends`).then( response => {
         this.setState({
           recommended_friends: response.data,
@@ -126,10 +105,10 @@ class Dashboard extends Component {
 
         <header className="app_header">
           <div className="header_helo_home_search_container">
-            <h1 className="header_helo_title">Helo</h1>
-            <img className="header_home_icon" src="" alt="Home/Dashboard"/>
+            <p className="header_helo_title">Helo</p>
+            <img className="header_home_icon" src={home_logo} alt="Home/Dashboard"/>
             <Link to='/search'>
-            <img className="header_search_icon" src="" alt="Search"/>
+            <img className="header_search_icon" src={search_logo} alt="Search"/>
             </Link>
           </div>
           <div className="header_view_title_container">
@@ -142,7 +121,7 @@ class Dashboard extends Component {
 
 
 
-        <section className="app_display_area">
+        <section className="dashboard_display_area">
 
           <div className="dashboard_user_info_and_welcome_text_container">
             <div className="dashboard_user_info_container">
@@ -162,7 +141,11 @@ class Dashboard extends Component {
             </div>
           </div>
 
-          <div className="dashboard_recommended_friends_container">
+        </section>
+
+
+        <section className="app_display_area">
+
             <div className="recommended_friends_header">
               <p className="recommended_friends_header_title">Recommended Friends</p>
               <div className="recommended_friends_header_sorting_container">
@@ -182,8 +165,11 @@ class Dashboard extends Component {
               </div>
             </div>
 
-            {!this.state.sorted_friends[0] ? <p className="no_recommended_friends_text">No recommendations</p> : 
-              <p></p>}
+            <div className="no_recommended_friends_text_container">
+              {!this.state.sorted_friends[0] ? <p className="no_recommended_friends_text">No recommendations</p> : 
+               <p></p>}
+            </div>
+            
 
             <div className="actual_recommended_friends_container">
 
@@ -201,8 +187,6 @@ class Dashboard extends Component {
               })}
 
             </div>
-
-          </div>
 
         </section>
 

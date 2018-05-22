@@ -1,5 +1,82 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+
+body, .dashboard_overall {
+  background-color: #EEEEEE;
+  padding-bottom: 20px;
+}
+
+.app_header {
+  width: 100vw;
+  height: 65px;
+  margin: 0;
+  background-color: #318972;
+  display: flex;
+  box-shadow: 0 5px 20px 0 rgba(0,0,0,0.6);
+}
+
+.header_helo_home_search_container {
+  height: 65px;
+  width: 33%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header_helo_title {
+  margin-top: 2px;
+  margin-bottom: 0;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: white;
+}
+
+.header_home_icon, .header_search_icon {
+  margin-left: 20px;
+}
+
+#one, #two {
+  margin-top:3px;
+}
+
+.header_search_icon {
+  padding-top: 8px;
+}
+
+.header_view_title_container {
+  height: 65px;
+  width: 33%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header_view_title {
+  font-size: 20px;
+  color: white;
+  font-weight: lighter;
+}
+
+.header_logout_container {
+  height: 65px;
+  width: 33%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header_logout_container a {
+  font-size: 16px;
+  color: white;
+  font-weight: lighter;
+}
+
+.app_display_area {
+  width: 870px;
+  margin: auto;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px 0 rgba(0,0,0,0.2);
+  background: white;
 }
 
 

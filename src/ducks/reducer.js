@@ -10,6 +10,7 @@ export function addInfo(user_info) {
 }
 
 const initialState = {
+  id: 0,
   u_pic_url: '',
   u_first_name: '',
   u_last_name: '',
