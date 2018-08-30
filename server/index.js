@@ -37,9 +37,7 @@ passport.use(new Auth0Strategy(
     scope: 'openid profile email'
   },
   function(accessToken, refreshToken, extraParams, profile, done) {
-    // console.log('profile', profile);
     app.get('db').check_user(profile.id).then( checkUserResults => {
-      // console.log('check_user', checkUserResults);
       if(checkUserResults[0]) {
         done(null, checkUserResults[0].id);
       } else {
@@ -55,12 +53,10 @@ passport.use(new Auth0Strategy(
 ))
 //serializeUser sets the cookie that will be stored in the front end
 passport.serializeUser((id, done) => {
-  // console.log('serialize', id);
   done(null, id);
 });
 //deserializeUser takes the cookie from the front end and decides what will be accessible on sessions
 passport.deserializeUser((id, done) => {
-  // console.log('deserialize', id);
   //database query to get all the user's information using their id, and then pass that information into "done":
   app.get('db').get_user_info(id).then( getUserResults => {
     done(null, getUserResults[0]);
@@ -80,7 +76,7 @@ app.get('/api/checklogin', (req, res) => {
   if(req.user) {
     res.status(200).send(req.user)
   } else {
-    return res.status(403).send("User not logged in. Access denied.");
+    return res.status(401).send("User not logged in. Access denied.");
   }
 })
 
@@ -134,18 +130,34 @@ app.get('/api/auth/logout', (req, res) => {
 //Endpoint for "Search.js"
 app.get('/api/check_number_of_pages', (req, res) => {
   app.get('db').check_number_of_pages(req.user.id).then( response => {
-    console.log('check number of pages response', response);
     res.status(200).send(response)
   }).catch ( error => {
-    console.log('check number of pages query error', error);
     res.status(500).send(error);
   })
 })
 
 //Endpoint for "Search.js"
+app.get('/api/check_number_of_filtered_pages', (req, res) => {
+  if(req.query.search_criteria === 'u_first_name') {
+    app.get('db').check_number_of_filtered_pages_by_first_name(req.user.id, req.query.search_text).then( response => {
+      res.status(200).send(response)
+    }).catch ( error => {
+      res.status(500).send(error);
+    })
+  } else {
+    app.get('db').check_number_of_filtered_pages_by_last_name(req.user.id, req.query.search_text).then( response => {
+      onsole.log('pages by last name', response);
+      res.status(200).send(response)
+    }).catch ( error => {
+      res.status(500).send(error);
+    })
+  }
+  
+})
+
+//Endpoint for "Search.js"
 app.get('/api/get_friend_ids', (req, res) => {
   app.get('db').get_friend_ids(req.user.id).then( response => {
-    console.log('get friend ids response', response);
     res.status(200).send(response)
   }).catch ( error => {
     console.log('get friend ids query error', error);
@@ -163,30 +175,24 @@ app.get('/api/get_other_users/:offset', (req, res) => {
   })
 })
 
-// app.post('/api/get_other_filtered_users/:offset', (req, res) => {
-//   console.log('new info', req.body.search_criteria)
-//   let searchCol = `${req.body.search_criteria} like`
-//   let criteria = {
-//     'id !=': req.user.id,
-//     [searchCol]: req.body.search_text
-//   }
-//   app.get('db').helo_users.find(criteria).then( response => {
-//     console.log('get other filtered users response', response);
-//     res.status(200).send(response)
-//   }).catch ( error => {
-//     console.log('get 10 filtered users query error', error);
-//     res.status(500).send(error);
-//   })
-// })
+//Endpoint for "Search.js"
+app.get(`/api/get_other_filtered_users/:offset`, (req, res) => {
+  if(req.query.search_criteria === 'u_first_name') {
+    app.get('db').get_ten_by_first_name(req.user.id, req.query.search_text, req.params.offset).then( response => {
+      res.status(200).send(response);
+    }).catch( error => {
+      console.log('get ten by first name error', error);
+      res.status(500).send(error);
+    })
+  } else {
+    app.get('db').get_ten_by_last_name(req.user.id, req.query.search_text, req.params.offset).then( response => {
+      res.status(200).send(response)
+    }).catch( error => {
+      console.log('get ten by last name error', error);
+      res.status(500).send(error);
+    })
+  }
 
-app.post('/api/get_other_filtered_users:offset', (req, res) => {
-  app.get('db').get_ten_filtered(req.user.id, req.body.search_criteria, req.body.search_text, req.params.offset).then( response => {
-    console.log('get other filtered users response', response);
-    res.status(200).send(response)
-  }).catch ( error => {
-    console.log('get 10 filtered users query error', error);
-    res.status(500).send(error);
-  })
 })
 
 //LISTEN

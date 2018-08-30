@@ -24,17 +24,20 @@ class Search extends Component {
       friend_ids: [],
       all_other_users: [],
       sorted_users: [],
-      search_criteria: 'Hobby',
+      search_criteria: '--',
       search_text: '',
       pages_array: [],
-      page_number: 1
+      page_number: 1,
+      searching: false,
+      filtered_pages_set: false
     };
     this.getFriendIds = this.getFriendIds.bind(this);
     this.checkNumberOfPages = this.checkNumberOfPages.bind(this);
+    this.checkNumberOfFilteredPages = this.checkNumberOfFilteredPages.bind(this);
     this.getOtherUsers = this.getOtherUsers.bind(this);
     this.adjustSortCriteriaOnChange = this.adjustSortCriteriaOnChange.bind(this);
     this.adjustSearchTextOnChange = this.adjustSearchTextOnChange.bind(this);
-    this.handleCustomSearchOnClick = this.handleCustomSearchOnClick.bind(this);
+    this.getFilteredUsers = this.getFilteredUsers.bind(this);
     this.handleResetOnClick = this.handleResetOnClick.bind(this);
     this.handleRemoveFriendOnClick = this.handleRemoveFriendOnClick.bind(this);
     this.handleAddFriendOnClick = this.handleAddFriendOnClick.bind(this);
@@ -56,11 +59,9 @@ class Search extends Component {
 
   getFriendIds() {
     axios.get('/api/get_friend_ids').then( response => {
-      console.log('get_friend_ids_results', response.data);
       let newArray = response.data.map( obj => {
         return obj.friend_id
       })
-      console.log(newArray);
       this.setState({
         friend_ids: newArray
       })
@@ -73,51 +74,67 @@ class Search extends Component {
       for (var i = 1; i <= Math.ceil(response.data[0].count / 10); i++) {
         pageArray.push(i);
       }
-      console.log(pageArray);
       this.setState({
         pages_array: pageArray
       })
     })
   }
 
+  checkNumberOfFilteredPages() {
+    axios.get(`/api/check_number_of_filtered_pages?search_criteria=${this.state.search_criteria}&search_text=${this.state.search_text}`).then( response => {
+      let pageArray = [];
+      for (var i = 1; i <= Math.ceil(response.data[0].count / 10); i++) {
+        pageArray.push(i);
+      }
+      this.setState({
+        pages_array: pageArray,
+        filtered_pages_set: true
+      })
+    })
+  }
+
+  //Method onClick: when "2" or "3" or "4" is clicked, load the next four "other" users
   getOtherUsers() {
     let offset = (this.state.page_number - 1) * 10;
     axios.get(`/api/get_other_users/${offset}`).then( response => {
-      console.log('get_other_users_results', response);
       this.setState({
         all_other_users: response.data,
         sorted_users: response.data
       })
+    }).catch( error => {
+      console.log('get other users error', error )
     })
   }
 
   //Method onChange: update this.state.search_criteria as it is altered
   adjustSortCriteriaOnChange(event) {
-    console.log('result of event related to adjustSortCriteriaOnChange', event.target.value);
-      this.setState({
-        search_criteria: event.target.value
-      })
+    this.setState({
+      search_criteria: event.target.value,
+      searching: true
+    })
   }
 
   //Method onChange: update this.state.search_box_content as it is typed
   adjustSearchTextOnChange(event) {
     this.setState({
-      search_text: event.target.value
+      search_text: event.target.value,
+      searching: true
     })
   }
 
-  //Method onClick: when "search" is clicked, get all_other_users who meet the match the information in the search_criteria and the search_box_content
-  handleCustomSearchOnClick() {
+  getFilteredUsers() {
+    if(this.state.filtered_pages_set === false) {
+      this.checkNumberOfFilteredPages();
+    }
     let offset = (this.state.page_number - 1) * 10;
-    axios.post(`/api/get_other_filtered_users/${offset}`, {
-      search_criteria: this.state.search_criteria,
-      search_text: this.state.search_text
-    }).then( response => {
-      console.log('get_other_filtered_users_results', response);
+    axios.get(`/api/get_other_filtered_users/${offset}?search_criteria=${this.state.search_criteria}&search_text=${this.state.search_text}`)
+    .then( response => {
       this.setState({
         all_other_users: response.data,
         sorted_users: response.data
       })
+    }).catch( error => {
+      console.log('get filtered users error', error )
     })
   }
 
@@ -125,13 +142,14 @@ class Search extends Component {
   handleResetOnClick(event) {
     this.setState({
       search_criteria: '--',
-      search_text: ''
+      search_text: '',
+      searching: false,
+      filtered_pages_set: false
     },()=>{
+      this.checkNumberOfPages();
       this.getOtherUsers();
     })
   }
-
-  //Method onClick: when "2" or "3" or "4" is clicked, load the next four "other" users
 
   handleRemoveFriendOnClick(remove_friend_id) {
     axios.delete(
@@ -157,7 +175,12 @@ class Search extends Component {
     this.setState({
       page_number: new_page_number
     }, () => {
-      this.getOtherUsers();
+      if(this.state.searching === false) {
+        this.getOtherUsers();
+      }
+      if(this.state.searching === true) {
+        this.getFilteredUsers();
+      }
     });
   }
 
@@ -189,17 +212,10 @@ class Search extends Component {
               <option value='--' >--</option>
               <option value='u_first_name' >First Name</option>
               <option value='u_last_name' >Last Name</option>
-              <option value='u_gender' >Gender</option>
-              <option value='u_hair_color' >Hair Color</option>
-              <option value='u_eye_color' >Eye Color</option>
-              <option value='u_hobby' >Hobby</option>
-              <option value='u_birth_day' >Birth Day</option>
-              <option value='u_birth_month' >Birth Month</option>
-              <option value='u_birth_year' >Birth Year</option>
             </select>
             <input value={this.state.search_text} onChange={this.adjustSearchTextOnChange} className="search_input_box" />
             {this.state.search_criteria !== '--' && this.state.search_text !== '' ? 
-              <button onClick={this.handleCustomSearchOnClick} className="search_button">Search</button> :
+              <button onClick={this.getFilteredUsers} className="search_button">Search</button> :
               <button className="search_button">Search</button>}
             <button onClick={this.handleResetOnClick} className="reset_search_button">Reset</button>
           </div>
