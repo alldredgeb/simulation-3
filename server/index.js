@@ -15,7 +15,7 @@ const port = 3007;
 
 //TOP LEVEL MIDDLEWARE
 app.use(bodyParser.json());
-app.use(express.static(__dirname + './../public/build'));
+app.use(express.static(__dirname + '/../build'));
 app.use(session({
   secret: process.env.SECRET,
   resave: false,
@@ -67,8 +67,8 @@ passport.deserializeUser((id, done) => {
 //ENDPOINTS
 //Endpoint for "Auth.js"
 app.get('/api/auth', passport.authenticate('auth0', {
-  successRedirect: 'http://localhost:3000/#/dashboard',
-  failureRedirect: 'http://localhost:3000/#/'
+  successRedirect: process.env.SUCCESS_REDIRECT,
+  failureRedirect: process.env.FAILURE_REDIRECT
 }))
 
 //Endpoint for "Auth.js" and "Dashboard.js"
@@ -124,7 +124,7 @@ app.put('/api/updateuser', (req, res) => {
 //Endpoint for "Dashboard.js", "Profile.js", and "Search.js"
 app.get('/api/auth/logout', (req, res) => {
   req.logOut();
-  res.redirect(`https://leroy-jones.auth0.com/v2/logout?returnTo=http%3A%2F%2Flocalhost:3000&client_id=${process.env.CLIENT_ID}`)
+  res.redirect(process.env.AUTH_ZERO_RETURN)
 })
 
 //Endpoint for "Search.js"
